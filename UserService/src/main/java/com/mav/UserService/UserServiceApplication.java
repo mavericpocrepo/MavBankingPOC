@@ -1,7 +1,11 @@
 package com.mav.UserService;
 
+import com.mav.UserService.model.Users;
+import com.mav.UserService.repo.UsersRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class UserServiceApplication {
@@ -10,4 +14,15 @@ public class UserServiceApplication {
 		SpringApplication.run(UserServiceApplication.class, args);
 	}
 
-}
+	@Bean
+	public CommandLineRunner loadUserData(UsersRepository usersRepository) {
+		return args -> {
+			Users user1 = new Users();
+			user1.setEmail("yash@g.com");
+			user1.setPassword("yash");
+			user1.setRole("ADMIN");
+			usersRepository.save(user1);
+		};
+	}
+
+	}
