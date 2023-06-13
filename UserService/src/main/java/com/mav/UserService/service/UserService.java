@@ -16,7 +16,6 @@ public class UserService {
     public UserResponse findUserById(Long id)
     {
        Optional<Users> users= usersRepository.findById(id);
-
        return UserResponse.builder()
                .userId(users.get().getUserId())
                .email(users.get().getEmail())
