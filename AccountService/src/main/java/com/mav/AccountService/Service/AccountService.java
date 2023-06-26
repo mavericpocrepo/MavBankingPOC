@@ -1,12 +1,24 @@
-package com.mav.AccountService.Service;
+package com.mav.accountservice.service;
 
-import com.mav.AccountService.Model.AccountModel;
+import com.mav.accountservice.entity.Account;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface AccountService {
-public AccountModel create(AccountModel accountModel);
-public void delete(Integer account_Id);
-public AccountModel fetchAccountModel(Integer account_Id);
-public AccountModel updateAccountModel(Integer account_Id,Integer user_id);
-}
+    Optional<Account> getAccountById(Long customer_Id);
 
-//save,
+    List<Account> getAccountByCustomer_id(String customer_Id);
+
+    List<Account> getAllAccounts();
+
+    Optional<Account> deleteAccountByIds(Long account_Id, String customer_Id);
+
+    String updateAccount(Long customer_Id, Account updatedAccount);
+
+    Account updateAccountByField(Long account_Id, Map<String, Object> fields);
+
+    Long createAccount(Account accountRequest);
+
+}
