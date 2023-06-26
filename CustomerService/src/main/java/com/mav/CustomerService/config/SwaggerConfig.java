@@ -11,18 +11,11 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-/*@OpenAPIDefinition(
-        info = @Info(
-                title = "CUSTOMER-SERVICE",
-                version = "v1.0"
-        )
-)*/
 
 @Configuration
 @EnableSwagger2
 @EnableWebMvc
 public class SwaggerConfig {
-    // Additional configuration or customization can be added here
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -35,10 +28,11 @@ public class SwaggerConfig {
     public ApiInfo apiInfo() {
         final ApiInfoBuilder builder = new ApiInfoBuilder();
         return builder.title("CUSTOMER-SERVICE")
-                .description("Controller for CUSTOMER-SERVICE")
-                .version("1.0.0")
-                .license("MIT Licence")
-                .licenseUrl("https://your-license-url.com").build();
+                .description("Controller for customer-service")
+                .version("v2.3.1")
+                .license("GNU General Public License")
+                .licenseUrl("https://www.gnu.org/licenses/gpl-3.0.en.html")
+                .build();
         //return builder.build();
     }
 }

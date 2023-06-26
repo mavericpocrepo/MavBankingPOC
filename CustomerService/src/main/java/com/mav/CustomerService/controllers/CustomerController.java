@@ -2,13 +2,13 @@ package com.mav.CustomerService.controllers;
 
 
 import com.mav.CustomerService.dto.CustomerDto;
+import com.mav.CustomerService.exceptions.CustomerCreationException;
 import com.mav.CustomerService.exceptions.CustomerNotFoundException;
-import com.mav.CustomerService.model.Customer;
+import com.mav.CustomerService.entity.Customer;
 import com.mav.CustomerService.repo.CustomerRepository;
 import com.mav.CustomerService.service.ApiService;
 import com.mav.CustomerService.serviceImpl.CustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,94 +26,82 @@ public class CustomerController {
     private CustomerRepository customerRepository;
 
     @PostMapping("/customer")
-    public String saveCustomerDetails(@RequestBody Customer customerRequest) {
+    public ResponseEntity<Object> createCustomer(@RequestBody CustomerDto customerRequest) {
         try {
-            Customer customer = Customer.builder()
-                    .id(customerRequest.getId())
-                    .customer_id(customerRequest.generateCustomerId())
-                    .first_Name(customerRequest.getFirst_Name())
-                    .last_Name(customerRequest.getLast_Name())
-                    .date_Of_Birth(customerRequest.getDate_Of_Birth())
-                    .phone_number(customerRequest.getPhone_number())
-                    .email(customerRequest.getEmail())
-                    .pan_Number(customerRequest.getPan_Number())
-                    .aadhaar(customerRequest.getAadhaar())
-                    .street_name(customerRequest.getStreet_name())
-                    .city(customerRequest.getCity())
-                    .state(customerRequest.getState())
-                    .zip_code(customerRequest.getZip_code())
-                    .country(customerRequest.getCountry()).build();
-            Customer customerResponse = customerServiceImpl.saveCustomer(customer);
-            return new ResponseEntity<String>(customerResponse.getCustomer_id(), HttpStatus.CREATED).getBody();
-        } catch (Exception e) {
-            long longStatusCode = (long) HttpStatus.INTERNAL_SERVER_ERROR.value();
-            return longStatusCode + "";
+            String customer_id = customerServiceImpl.createCustomer(customerRequest);
+            return ResponseEntity.ok(customer_id);
+        } catch (CustomerCreationException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to create customer: " + e.getMessage());
         }
     }
 
-    @GetMapping("/customer/{id}")
-    public Optional<Customer> getCustomerById(@PathVariable Long id) {
-        Optional<Customer> customer;
+    @GetMapping("/customer/{customer_id}")
+    public ResponseEntity<Object> getCustomerById(@PathVariable String customer_id) {
         try {
-            customer = customerServiceImpl.getCustomerById(id);
-            if (customer == null) {
-                throw new CustomerNotFoundException("Customer with ID " + id + " does not exist.");
+            Optional<Customer> customer = customerServiceImpl.getCustomerById(customer_id);
+            if (customer.isPresent()) {
+                return ResponseEntity.ok(customer.get());
+            } else {
+                return ResponseEntity.notFound().build();
             }
-        } catch (CustomerNotFoundException e) {
-            throw new CustomerNotFoundException("Error retrieving customer with ID " + id);
+        } catch (Exception e) {
+            String errorMessage = "Error while retrieving customer with ID: " + customer_id;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorMessage);
         }
-        return customer;
-    }
-    @GetMapping("/customer/by/{customer_id}")
-    public Optional<Customer> getCustomerByCustomer_id(@PathVariable String customer_id) {
-        try {
-            Customer customer = customerRepository.findByCustomer_id(customer_id);
-            if (customer == null) {
-                throw new CustomerNotFoundException("Customer with ID " + customer_id + " does not exist.");
-            }
-        } catch (CustomerNotFoundException e) {
-            throw new CustomerNotFoundException("Error retrieving customer with ID " + customer_id);
-        }
-        return customerServiceImpl.getCustomerByCustomer_id(customer_id);
     }
 
     @GetMapping("/all-customers")
-    public List<Customer> getAllCustomers() {
-        return customerServiceImpl.getAllCustomers();
+    public ResponseEntity<List<Customer>> getAllCustomers() {
+        try {
+            List<Customer> customers = customerServiceImpl.getAllCustomers();
+            if (customers.isEmpty()) {
+                return ResponseEntity.noContent().build(); // Return 204 No Content if no customers are found
+            }
+            return ResponseEntity.ok(customers); // Return the list of customers
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Return 500 Internal Server Error if an exception occurs
+        }
     }
 
-    @DeleteMapping("/{customer_id}")
+    @DeleteMapping("customer/{customer_id}")
     public ResponseEntity<String> deleteCustomer(@PathVariable String customer_id) {
         try {
-            Customer customer = customerRepository.findByCustomer_id(customer_id);
-            if (customer == null) {
-                throw new CustomerNotFoundException("Customer with ID " + customer_id + " does not exist.");
+            Optional<Customer> customer = customerServiceImpl.deleteCustomer(customer_id);
+            if (customer.isPresent()) {
+                return ResponseEntity.ok("Customer deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found");
             }
-            customerServiceImpl.deleteCustomerById(customer_id);
-            return ResponseEntity.ok("Customer deleted successfully");
-
-        } catch (CustomerNotFoundException e) {
-            throw new CustomerNotFoundException("Error retrieving customer with ID " + customer_id);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting customer");
         }
-
     }
 
-    @PutMapping("/update")
+    @PutMapping("/updateCustomer")
     public ResponseEntity<String> updateCustomer(@RequestBody CustomerDto updatedCustomerDto) {
-        boolean flage = customerServiceImpl.updateCustomer(updatedCustomerDto);
-        if (flage)
-            return ResponseEntity.ok("Customer updated successfully");
-        return (ResponseEntity<String>) ResponseEntity.noContent();
+        boolean flag = customerServiceImpl.updateCustomer(updatedCustomerDto);
+        if (flag)
+            return ResponseEntity.ok("Customer updated successfully..");
+        return ResponseEntity.badRequest().body("Failed to update customer..");
     }
-
+    
     @PatchMapping("/updateCustomer/{customer_id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable String customer_id,@RequestBody Map<String,Object> fields)
-    {
-        Customer customer =  customerServiceImpl.updateCustomerByField(customer_id,fields);
-        return ResponseEntity.ok(customer);
+    public ResponseEntity<?> updateCustomer(@PathVariable String customer_id, @RequestBody Map<String, Object> fields) {
+        try {
+            Customer customer = customerServiceImpl.updateCustomerByField(customer_id, fields);
+            return ResponseEntity.ok(customer);
+        } catch (CustomerNotFoundException e) {
+            String errorMessage = "Customer not found for ID: " + customer_id;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        } catch (Exception e) {
+            String errorMessage = "Error while updating customer...";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+        }
     }
 
-    @PutMapping("/mapping_customer")
+    @GetMapping("/mapping_customer")
     public String getCustomerIdByPanNumber(@RequestBody CustomerDto customerDto) {
         String customer_id = customerServiceImpl.getCustomerIDBy_Pan_Number(customerDto);
         return customer_id;
