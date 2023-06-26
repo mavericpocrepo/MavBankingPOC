@@ -2,8 +2,10 @@ package com.mav.authservice.dao;
 
 import com.mav.authservice.clients.UserFeignClient;
 import com.mav.authservice.dto.UserDetailsResponse;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -32,12 +34,17 @@ private final UserFeignClient userFeignClient;
 //                getAuthorities(response.getBody().getRole())
 //
 //                );
-
-        UserDetailsResponse user = userFeignClient.getUserByEmail(email);
-        return new User(user.getEmail(),
-                user.getPassword(),
-        getAuthorities(user.getRole()));
-
+        try
+        {
+            UserDetailsResponse user = userFeignClient.getUserByEmail(email);
+            return new  User(user.getEmail(),
+                        user.getPassword(),
+                        getAuthorities(user.getRole()));
+        }
+        catch (FeignException.InternalServerError e)
+        {
+            throw new BadCredentialsException("No User found");
+        }
 
 //        UserDetails dummyUserDetails = new org.springframework.security.core.userdetails.User(
 //                "yash@g.com",
