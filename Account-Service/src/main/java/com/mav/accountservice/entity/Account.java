@@ -51,14 +51,11 @@ public class Account implements Serializable {
     @Column(name = "overdraft_Limit")
     private String overdraft_Limit;
 
-    @Column(name = "c_Date")
-    private Date c_Date;
+    @Column(name = "create_dDate")
+    private Date created_Date;
 
-    @Column(name = "l_U_Date")
-    private Date l_U_Date;
-
-    @Column(name = "u_B_User")
-    private String u_B_User;
+    @Column(name = "updated_By")
+    private String updated_By;
 
 
 }

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
 import java.util.Date;
 @Builder
 @AllArgsConstructor
@@ -23,8 +25,7 @@ public class CustomerDto {
     private String state;
     private String zip_code;
     private String country;
-    private Date c_Date;
-    private Date lm_Date;
-    private String updatedBy;
+    private Date created_Date;
+    private String updated_By;
 
 }

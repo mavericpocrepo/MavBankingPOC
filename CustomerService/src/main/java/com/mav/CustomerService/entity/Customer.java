@@ -50,33 +50,10 @@ public class Customer implements Serializable {
     private String zip_Code;
     @Column(name = "country")
     private String country;
-    @Column(name = "c_Date")
-    private Date c_Date;
-    @Column(name = "lm_Date")
-    private Date lm_Date;
+    @Column(name = "create_dDate")
+    private Date created_Date;
     @Column(name = "updated_By")
     private String updated_By;
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "customer_id='" + customer_id + '\'' +
-                ", first_Name='" + first_Name + '\'' +
-                ", last_Name='" + last_Name + '\'' +
-                ", date_Of_Birth=" + date_Of_Birth +
-                ", phone_Number=" + phone_Number +
-                ", email='" + email + '\'' +
-                ", pan_Number='" + pan_Number + '\'' +
-                ", aadhaar='" + aadhaar + '\'' +
-                ", street_Name='" + street_Name + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", zip_Code='" + zip_Code + '\'' +
-                ", country='" + country + '\'' +
-                ", c_Date=" + c_Date +
-                ", lm_Date=" + lm_Date +
-                ", updated_By='" + updated_By + '\'' +
-                '}';
-    }
 }
 

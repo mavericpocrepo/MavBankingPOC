@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date;
 
 public class AccountDto {
     private long id;
@@ -15,6 +16,7 @@ public class AccountDto {
     private String status;
     private String interest_Rate;
     private String overdraft_Limit;
-
+    private Date created_Date;
+    private String updated_By;
 
 }
