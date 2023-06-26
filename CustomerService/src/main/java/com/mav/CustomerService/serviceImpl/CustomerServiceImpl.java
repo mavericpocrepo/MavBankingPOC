@@ -7,13 +7,14 @@ import com.mav.CustomerService.repo.CustomerRepository;
 import com.mav.CustomerService.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Objects;
 
-
+@Service
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
