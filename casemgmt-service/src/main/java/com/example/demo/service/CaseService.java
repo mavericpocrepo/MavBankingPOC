@@ -30,11 +30,11 @@ public class CaseService {
                 .creationDate(LocalDateTime.now())
                 .lastUpdatedDate(LocalDateTime.now())
                 .build();
-            repository.save(obj);
+           Case savedCase =  repository.save(obj);
 
         CaseCreateResponse response = CaseCreateResponse.builder()
-                .caseId(obj.getCaseId())
-                .status(obj.getStatus())
+                .caseId(savedCase.getCaseId())
+                .status(savedCase.getStatus())
                 .build();
         return response;
     }

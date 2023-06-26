@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CaseCreateRequest;
 import com.example.demo.dto.CaseCreateResponse;
+import com.example.demo.dto.EmployeeResponse;
 import com.example.demo.service.CaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

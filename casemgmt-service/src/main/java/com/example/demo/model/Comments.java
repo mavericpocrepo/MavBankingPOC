@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 @Entity
 @Data
@@ -17,4 +18,5 @@ public class Comments {
     private String commentId;
     private String caseId;
     private String empId;
+    private String commentDetails;
 }
