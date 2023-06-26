@@ -1,2 +1,4 @@
-package com.example.demo.dto;public class CommentsCreateRequest {
+package com.example.demo.dto;
+
+public class CommentsCreateRequest {
 }

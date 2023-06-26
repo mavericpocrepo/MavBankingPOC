@@ -1,4 +1,4 @@
-package com.mav.authservice.dto;
+package com.mav.apigateway.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AuthResponse {
     String token;
+    String role;
 }

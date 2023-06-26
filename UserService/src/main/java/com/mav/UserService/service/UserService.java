@@ -5,7 +5,11 @@ import com.mav.UserService.model.Users;
 import com.mav.UserService.repo.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -37,6 +41,29 @@ public class UserService {
                 .role(users.getRole())
                 .build();
 
+
+    }
+
+
+    public Users updateUserByField(long id, Map<String, Object> fields) {
+        try {
+            Optional<Users> existingUser = usersRepository.findById(id);
+            if(existingUser.isPresent())
+            {
+                fields.forEach((key,value)->{
+                    Field field = ReflectionUtils.findField(Users.class, key);
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field,existingUser.get(),value);
+                });
+            }
+            return usersRepository.save(existingUser.get());
+
+        }
+        catch (NoSuchElementException e)
+        {
+            System.out.println(e);
+            throw new NoSuchElementException("No User Found");
+        }
 
     }
 }
