@@ -18,8 +18,8 @@ public class UserServiceApplication {
 	public CommandLineRunner loadUserData(UsersRepository usersRepository) {
 		return args -> {
 			Users user1 = new Users();
-			user1.setEmail("yash@g.com");
-			user1.setPassword("yash");
+			user1.setEmail("test@g.com");
+			user1.setPassword("test");
 			user1.setRole("ADMIN");
 			usersRepository.save(user1);
 		};
