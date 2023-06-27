@@ -57,5 +57,9 @@ public class Account implements Serializable {
     @Column(name = "updated_By")
     private String updated_By;
 
+    @Column(name = "updated_Date")
+    private Date updated_Date;
+
+
 
 }

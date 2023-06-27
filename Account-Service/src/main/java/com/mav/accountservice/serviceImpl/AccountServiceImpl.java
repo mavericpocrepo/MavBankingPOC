@@ -32,9 +32,9 @@ public class AccountServiceImpl implements AccountService {
                     .status(accountRequest.getStatus())
                     .interest_Rate(accountRequest.getInterest_Rate())
                     .overdraft_Limit(accountRequest.getOverdraft_Limit())
-                    .c_Date(new Date())
-                    .u_B_User("Mithlesh")// need to change at runtine user
-                    .l_U_Date(new Date())
+                    .created_Date(new Date())
+                    .updated_By("Mithlesh")// need to change at runtine user
+                    .updated_Date(new Date())
                     .build();
             /*String customer_id = String.valueOf(accountApiService.getCustomerIdByPanNumber(account)); */ //uncomment to indirect with customer api
             Account createdAccountResponse = accountRepository.save(account);
