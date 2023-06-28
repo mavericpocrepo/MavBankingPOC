@@ -6,6 +6,10 @@ import com.mav.CustomerService.entity.Customer;
 import com.mav.CustomerService.exceptions.CustomerCreationException;
 import com.mav.CustomerService.exceptions.CustomerNotFoundException;
 import com.mav.CustomerService.serviceImpl.CustomerServiceImpl;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,11 +21,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 
-import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 class CustomerControllerTest {
@@ -114,20 +115,7 @@ class CustomerControllerTest {
         assertEquals("Error while retrieving customer with ID: 12345", response.getBody());
     }
 
-/*    //------------------
-    @Test
-    void testGetAllCustomers_EmptyList() {
-        // Mock the customerServiceImpl.getAllCustomers() method to return an empty list
-        List<Customer> customers = new ArrayList<>();
-        when(customerService.getAllCustomers()).thenReturn(customers);
 
-        // Call the getAllCustomers() method in the controller
-        ResponseEntity<List<Customer>> response = customerController.getAllCustomers();
-
-        // Verify the response status code (should be 204 - No Content) and an empty response body
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        assertEquals(0, response.getBody().size());
-    }*/
     @Test
     void testGetAllCustomers_EmptyList() {
         // Mock the customerServiceImpl.getAllCustomers() method to return an empty list
@@ -219,63 +207,63 @@ class CustomerControllerTest {
         assertEquals("Error deleting customer", response.getBody());
     }
 
-//    @Test
-//    void testUpdateCustomer_Success() {
-//        // Mock the customerServiceImpl.updateCustomerByField() method to return the updated customer
-//        Customer updatedCustomer = new Customer();-
-//        when(customerService.updateCustomerByField(Mockito.anyString(), Mockito.anyMap())).thenReturn(updatedCustomer);
-//
-//        // Create a sample customer ID and fields map for updating
-//        String customerId = "123";
-//        Map<String, Object> fields = new HashMap<>();
-//        // Add the fields to be updated in the map
-//
-//        // Call the updateCustomer() method in the controller
-//        ResponseEntity<?> response = customerController.updateCustomer(customerId, fields);
-//
-//        // Verify the response status code (should be 200 - OK) and the response body
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(updatedCustomer, response.getBody());
-//
-//        // Verify that the customerServiceImpl.updateCustomerByField() method was called with the correct arguments
-//        verify(customerService, times(1)).updateCustomerByField(customerId, fields);
-//    }
-//
-//    @Test
-//    void testUpdateCustomer_CustomerNotFound() {
-//        // Mock the customerServiceImpl.updateCustomerByField() method to throw a CustomerNotFoundException
-//        String customerId = "123";
-//        Map<String, Object> fields = new HashMap<>();
-//        when(customerService.updateCustomerByField(Mockito.anyString(), Mockito.anyMap()))
-//                .thenThrow(new CustomerNotFoundException());
-//
-//        // Call the updateCustomer() method in the controller
-//        ResponseEntity<?> response = customerController.updateCustomer(customerId, fields);
-//
-//        // Verify the response status code (should be 404 - Not Found) and the response body
-//        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-//        assertEquals("Customer not found for ID: " + customerId, response.getBody());
-//
-//        // Verify that the customerServiceImpl.updateCustomerByField() method was called with the correct arguments
-//        verify(customerService, times(1)).updateCustomerByField(customerId, fields);
-//    }
-//
-//    @Test
-//    void testUpdateCustomer_InternalServerError() {
-//        // Mock the customerServiceImpl.updateCustomerByField() method to throw an exception
-//        String customerId = "123";
-//        Map<String, Object> fields = new HashMap<>();
-//        when(customerService.updateCustomerByField(Mockito.anyString(), Mockito.anyMap()))
-//                .thenThrow(new RuntimeException());
-//
-//        // Call the updateCustomer() method in the controller
-//        ResponseEntity<?> response = customerController.updateCustomer(customerId, fields);
-//
-//        // Verify the response status code (should be 500 - Internal Server Error) and the response body
-//        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-//        assertEquals("Error while updating customer...", response.getBody());
-//
-//        // Verify that the customerServiceImpl.updateCustomerByField() method was called with the correct arguments
-//        verify(customerService, times(1)).updateCustomerByField(customerId, fields);
-//    }
+    @Test
+    void testUpdateCustomer_Success() {
+        // Mock the customerServiceImpl.updateCustomerByField() method to return the updated customer
+        Customer updatedCustomer = new Customer();
+        when(customerService.updateCustomerByField(Mockito.anyString(), Mockito.anyMap())).thenReturn(updatedCustomer);
+
+        // Create a sample customer ID and fields map for updating
+        String customerId = "123";
+        Map<String, Object> fields = new HashMap<>();
+        // Add the fields to be updated in the map
+
+        // Call the updateCustomer() method in the controller
+        ResponseEntity<?> response = customerController.updateCustomer(customerId, fields);
+
+        // Verify the response status code (should be 200 - OK) and the response body
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedCustomer, response.getBody());
+
+        // Verify that the customerServiceImpl.updateCustomerByField() method was called with the correct arguments
+        verify(customerService, times(1)).updateCustomerByField(customerId, fields);
+    }
+
+    @Test
+    void testUpdateCustomer_CustomerNotFound() {
+        // Mock the customerServiceImpl.updateCustomerByField() method to throw a CustomerNotFoundException
+        String customerId = "123";
+        Map<String, Object> fields = new HashMap<>();
+        when(customerService.updateCustomerByField(Mockito.anyString(), Mockito.anyMap()))
+                .thenThrow(new CustomerNotFoundException("required customer with id "+customerId+" not found "));
+
+        // Call the updateCustomer() method in the controller
+        ResponseEntity<?> response = customerController.updateCustomer(customerId, fields);
+
+        // Verify the response status code (should be 404 - Not Found) and the response body
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Customer not found for ID: " + customerId, response.getBody());
+
+        // Verify that the customerServiceImpl.updateCustomerByField() method was called with the correct arguments
+        verify(customerService, times(1)).updateCustomerByField(customerId, fields);
+    }
+
+    @Test
+    void testUpdateCustomer_InternalServerError() {
+        // Mock the customerServiceImpl.updateCustomerByField() method to throw an exception
+        String customerId = "123";
+        Map<String, Object> fields = new HashMap<>();
+        when(customerService.updateCustomerByField(Mockito.anyString(), Mockito.anyMap()))
+                .thenThrow(new RuntimeException());
+
+        // Call the updateCustomer() method in the controller
+        ResponseEntity<?> response = customerController.updateCustomer(customerId, fields);
+
+        // Verify the response status code (should be 500 - Internal Server Error) and the response body
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Error while updating customer...", response.getBody());
+
+        // Verify that the customerServiceImpl.updateCustomerByField() method was called with the correct arguments
+        verify(customerService, times(1)).updateCustomerByField(customerId, fields);
+    }
 }
