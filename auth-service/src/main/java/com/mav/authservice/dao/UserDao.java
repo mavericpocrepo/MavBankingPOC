@@ -23,6 +23,7 @@ public class UserDao {
     private final RestTemplate restTemplate;
 private final UserFeignClient userFeignClient;
 
+    private UserDetailsResponse user; // Global variable
     public UserDetails findByEmail(String email)
     {
 //        String userUrl = "http://localhost:8080/api/users/userByEmail?email=" + email;
@@ -36,7 +37,7 @@ private final UserFeignClient userFeignClient;
 //                );
         try
         {
-            UserDetailsResponse user = userFeignClient.getUserByEmail(email);
+             user = userFeignClient.getUserByEmail(email);
             return new  User(user.getEmail(),
                         user.getPassword(),
                         getAuthorities(user.getRole()));
@@ -59,4 +60,7 @@ private final UserFeignClient userFeignClient;
         return Collections.singleton(new SimpleGrantedAuthority(role));
     }
 
+    public UserDetailsResponse getUserDetailsResponse() {
+        return user;
+    }
 }

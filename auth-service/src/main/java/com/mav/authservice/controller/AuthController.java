@@ -52,12 +52,16 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
             final UserDetails user = userDao.findByEmail(request.getEmail());
+            final UserDetailsResponse user1 = userDao.getUserDetailsResponse();
             System.out.println("YASH "+user);
             AuthResponse authResponse = new AuthResponse();
+
+
 
             if (user != null) {
                 authResponse.setToken(jwtUtils.generateToken(user));
                 authResponse.setRole(user.getAuthorities().toString());
+                authResponse.setCustomerId(user1.getCustomerId());
                 return ResponseEntity.ok(authResponse);
             }
            // return ResponseEntity.status(400).body("Some Error has occurred");

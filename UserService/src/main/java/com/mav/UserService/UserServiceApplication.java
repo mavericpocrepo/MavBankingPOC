@@ -21,6 +21,7 @@ public class UserServiceApplication {
 			user1.setEmail("test@g.com");
 			user1.setPassword("test");
 			user1.setRole("ADMIN");
+			user1.setCustomerId("123456789");
 			usersRepository.save(user1);
 		};
 	}
