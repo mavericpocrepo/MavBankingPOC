@@ -36,7 +36,6 @@ class AccountServiceTest {
         account.setInterest_Rate("0.05");
         account.setOverdraft_Limit("2000");
         account.setPan_Number("DBOPM3668G");
-        account.setU_B_User("BCE83C83d2A3");
 
 
         ArrayList<Account> records=new ArrayList<Account>();
@@ -82,7 +81,6 @@ class AccountServiceTest {
         account.setInterest_Rate("0.05");
         account.setOverdraft_Limit("2000");
         account.setPan_Number("DBOPM3668G");
-       account.setU_B_User("BCE83C83d2A3");
 
         ArrayList<Account> records=new ArrayList<Account>();
         records.add(account);
@@ -106,7 +104,6 @@ class AccountServiceTest {
         account.setInterest_Rate("0.05");
         account.setOverdraft_Limit("2000");
         account.setPan_Number("DBOPM3668G");
-        account.setU_B_User("BCE83C83d2A3");
 
         Mockito.when(accountRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(account));
         Mockito.doNothing().when(accountRepository).deleteAccountByIds(account.getAccount_Id(), account.getCustomer_Id());
@@ -126,7 +123,6 @@ class AccountServiceTest {
         account.setInterest_Rate("0.05");
         account.setOverdraft_Limit("2000");
         account.setPan_Number("DBOPM3668G");
-        account.setU_B_User("BCE83C83d2A3");
 
         Mockito.when(accountRepository.save(account)).thenReturn(account);
         Mockito.when(accountRepository.findById(3245L)).thenReturn(Optional.of(account));
@@ -169,7 +165,6 @@ class AccountServiceTest {
         account.setInterest_Rate("0.05");
         account.setOverdraft_Limit("2000");
         account.setPan_Number("DBOPM3668G");
-        account.setU_B_User("BCE83C83d2A3");
 
         Mockito.when(accountRepository.save(Mockito.any())).thenReturn(account);
         Long result=accountServiceimpl.createAccount(account);
