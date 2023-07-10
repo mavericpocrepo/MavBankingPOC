@@ -140,6 +140,7 @@ class AccountServiceTest {
         account.setAccount_Type("salary");
         account.setCustomer_Id("BCE83C83d2A3");
         account.setCurrency("IND");
+         account.setPan_Number("DBOPM3668G");
 
        Map<String,Account> map=new HashMap<String,Account>();
 
